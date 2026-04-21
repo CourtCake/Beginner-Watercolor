@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-4">
+  <h2 class="text-center mb-4">Results</h2>
+
+  <div class="wc-card p-4 text-center mb-4">
+    <div style="font-size:3.5rem; font-weight:600;">{{ score }}/{{ total }}</div>
+    {% if score == total %}
+      <p class="mt-2">Great job! You now have all the tools to get started on your own original creation!</p>
+    {% elif score >= total // 2 %}
+      <p class="mt-2">Good effort! Review the lessons and try again to master all the techniques.</p>
+    {% else %}
+      <p class="mt-2">Keep practicing! Head back to the lessons and brush up on the techniques.</p>
+    {% endif %}
+  </div>
+
+  <!-- Score breakdown -->
+  <div class="wc-card p-4 mb-4">
+    <h4 class="mb-3">Review</h4>
+    {% for item in breakdown %}
+    <div class="mb-3 pb-3 {% if not loop.last %}border-bottom{% endif %}">
+      <p class="mb-1"><strong>Q{{ loop.index }}:</strong> {{ item.question }}</p>
+      <p class="mb-0">
+        Your answer:
+        <span class="{% if item.correct %}text-success{% else %}text-danger{% endif %}">
+          {{ item.your_answer }}
+          {% if item.correct %} ✓{% else %} ✗{% endif %}
+        </span>
+      </p>
+      {% if not item.correct %}
+      <p class="mb-0 text-muted" style="font-size:1rem;">
+        Correct: {{ item.correct_answer }}
+      </p>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="d-flex justify-content-center gap-3">
+    <a href="/quiz/1" class="btn btn-wc">Restart Quiz</a>
+    <a href="/" class="btn btn-wc">Home</a>
+  </div>
+</div>
+
+{% endblock %}

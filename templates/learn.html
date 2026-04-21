@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-4">
+  <h2 class="text-center mb-4">{{ lesson.id }}. {{ lesson.title }}</h2>
+
+  <div class="wc-card p-4">
+    <div class="row align-items-start g-4">
+
+      <!-- Image placeholder -->
+      <div class="col-md-5 text-center">
+        {% if lesson.image %}
+          <img src="/static/images/{{ lesson.image }}" class="img-fluid rounded" alt="{{ lesson.title }}"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+        {% endif %}
+        <!-- Placeholder shown when image missing -->
+        <div class="bg-light border rounded d-flex align-items-center justify-content-center"
+             style="height:260px; {% if lesson.image %}display:none{% endif %}">
+          <span class="text-muted">[ {{ lesson.title }} image ]</span>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="col-md-7">
+        <p class="mb-4" style="font-size:1.15rem;">{{ lesson.description }}</p>
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <div class="box-green h-100">
+              <strong>Best for:</strong>
+              <ul class="mt-1 mb-0">
+                {% for item in lesson.best_for %}
+                  <li>{{ item }}</li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="box-orange h-100">
+              <strong>{{ lesson.tip_title }}</strong>
+              <p class="mt-1 mb-0">{{ lesson.tip }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="d-flex justify-content-between mt-4">
+    {% if lesson_num == 1 %}
+      <a href="/" class="btn btn-wc">Home</a>
+    {% else %}
+      <a href="/learn/{{ lesson_num - 1 }}" class="btn btn-wc">Prev</a>
+    {% endif %}
+
+    <span class="align-self-center text-muted" style="font-size:1rem;">
+      {{ lesson_num }} / {{ total }}
+    </span>
+
+    {% if lesson_num < total %}
+      <a href="/learn/{{ lesson_num + 1 }}" class="btn btn-wc">Next</a>
+    {% else %}
+      <a href="/quiz" class="btn btn-wc">Quiz →</a>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
