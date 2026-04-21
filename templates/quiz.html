@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container py-4">
+  <h2 class="text-center mb-4">Question {{ question_num }}</h2>
+
+  <div class="wc-card p-4">
+    <p class="text-center mb-4" style="font-size:1.25rem;">{{ question.question }}</p>
+
+    {% if question.image %}
+    <div class="row mb-4">
+      <div class="col-md-5">
+        <img src="/static/images/{{ question.image }}" class="img-fluid rounded" alt="Question image"
+             onerror="this.style.display='none'">
+      </div>
+    </div>
+    {% endif %}
+
+    <form method="POST" action="/quiz/{{ question_num }}" id="quizForm">
+      <div class="row g-3 justify-content-center">
+        {% for option in question.options %}
+        <div class="col-md-{% if question.options|length == 3 %}4{% else %}6{% endif %}">
+          <button type="submit" name="answer" value="{{ loop.index0 }}"
+                  class="option-btn {% if selected == loop.index0 %}selected{% endif %}">
+            {{ option }}
+          </button>
+        </div>
+        {% endfor %}
+      </div>
+    </form>
+  </div>
+
+  <!-- Navigation (prev only — next submits the form) -->
+  <div class="d-flex justify-content-between mt-4">
+    {% if question_num > 1 %}
+      <a href="/quiz/{{ question_num - 1 }}" class="btn btn-wc">Prev</a>
+    {% else %}
+      <a href="/quiz" class="btn btn-wc">Back</a>
+    {% endif %}
+
+    <span class="align-self-center text-muted" style="font-size:1rem;">
+      {{ question_num }} / {{ total }}
+    </span>
+
+    {% if question_num < total %}
+      <!-- clicking an option auto-submits; this is a fallback skip -->
+      <form method="POST" action="/quiz/{{ question_num }}">
+        <input type="hidden" name="answer" value="">
+        <button type="submit" class="btn btn-wc">Next →</button>
+      </form>
+    {% else %}
+      <form method="POST" action="/quiz/{{ question_num }}">
+        <input type="hidden" name="answer" value="">
+        <button type="submit" class="btn btn-wc">Submit</button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Allow clicking an option to immediately submit
+document.querySelectorAll('.option-btn').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    // highlight selected
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    this.classList.add('selected');
+    // form submits naturally via type=submit
+  });
+});
+</script>
+{% endblock %}
