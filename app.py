@@ -11,7 +11,7 @@ LESSONS = [
     {
         "id": 1,
         "title": "Wet on Dry",
-        "description": "Just get your brush wet, load it up with paint until it reaches the desired consistency and opacity, and start painting on the dry paper.",
+        "description": " This is a simple technique but once this is mastered, it opens up a world of possibilities with watercolor. \n Step 1: Dip your brush in water \n Step 2: Swirl the brush in the paint \n Step 3: Start painting across the paper",
         "best_for": ["Adding details", "Creating sharp edges", "Line work"],
         "tip_title": "Can't get a clean line?",
         "tip": "Too much water. Mix in more paint for more opacity and viscosity, or dab off some water.",
@@ -156,6 +156,7 @@ def learn(lesson_num):
 
 @app.route('/quiz')
 def quiz_intro():
+    session.pop('quiz_answers', None)
     return render_template('quiz_intro.html')
 
 @app.route('/quiz/<int:question_num>', methods=['GET', 'POST'])
@@ -201,6 +202,11 @@ def results():
         })
     total = len(QUIZ_QUESTIONS)
     return render_template('results.html', score=score, total=total, breakdown=breakdown)
+
+@app.route('/quiz/restart')
+def quiz_restart():
+    session.pop('quiz_answers', None)
+    return redirect(url_for('quiz', question_num=1))
 
 if __name__ == '__main__':
     app.run(debug=True)

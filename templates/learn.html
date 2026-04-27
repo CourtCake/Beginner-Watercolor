@@ -8,41 +8,43 @@
     <div class="row align-items-start g-4">
 
       <!-- Image placeholder -->
-      <div class="col-md-5 text-center">
+      <div class="col-md-6 text-center">
         {% if lesson.image %}
           <img src="/static/images/{{ lesson.image }}" class="img-fluid rounded" alt="{{ lesson.title }}"
                onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
         {% endif %}
         <!-- Placeholder shown when image missing -->
-        <div class="bg-light border rounded d-flex align-items-center justify-content-center"
-             style="height:260px; {% if lesson.image %}display:none{% endif %}">
+        <div class="bg-light border rounded d-flex align-items-center justify-content-center {% if lesson.image %}d-none{% endif %}"
+          style="height:260px;">
           <span class="text-muted">[ {{ lesson.title }} image ]</span>
         </div>
       </div>
 
       <!-- Content -->
-      <div class="col-md-7">
-        <p class="mb-4" style="font-size:1.15rem;">{{ lesson.description }}</p>
-        <div class="row g-3">
-          <div class="col-sm-6">
-            <div class="box-green h-100">
-              <strong>Best for:</strong>
-              <ul class="mt-1 mb-0">
-                {% for item in lesson.best_for %}
-                  <li>{{ item }}</li>
-                {% endfor %}
-              </ul>
-            </div>
-          </div>
-          <div class="col-sm-6">
-            <div class="box-orange h-100">
-              <strong>{{ lesson.tip_title }}</strong>
-              <p class="mt-1 mb-0">{{ lesson.tip }}</p>
-            </div>
-          </div>
-        </div>
+      <div class="col-md-6">
+        <p class="mb-4" style="font-size:1.15rem; white-space: pre-line;">{{ lesson.description }}</p>
       </div>
 
+    </div>
+
+    <!-- Info boxes -->
+    <div class="row g-3 mt-2">
+      <div class="col-sm-6">
+        <div class="box-green h-100">
+          <strong>✅ Best for:</strong>
+          <ul class="mt-1 mb-0">
+            {% for item in lesson.best_for %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+      <div class="col-sm-6">
+        <div class="box-orange h-100">
+          <strong>💡 {{ lesson.tip_title }}</strong>
+          <p class="mt-1 mb-0">{{ lesson.tip }}</p>
+        </div>
+      </div>
     </div>
   </div>
 
