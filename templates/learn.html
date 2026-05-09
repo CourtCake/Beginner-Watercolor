@@ -7,18 +7,21 @@
   <div class="wc-card p-4">
     <div class="row align-items-start g-4">
 
-      <!-- Image placeholder -->
-      <div class="col-md-6 text-center">
-        {% if lesson.image %}
-          <img src="/static/images/{{ lesson.image }}" class="img-fluid rounded" alt="{{ lesson.title }}"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
-        {% endif %}
-        <!-- Placeholder shown when image missing -->
-        <div class="bg-light border rounded d-flex align-items-center justify-content-center {% if lesson.image %}d-none{% endif %}"
+    <!-- Video -->
+    <div class="col-md-6 text-center">
+      {% if lesson.video %}
+        <video controls muted class="img-fluid rounded">
+          <source src="/{{ lesson.video }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      {% else %}
+        <!-- Placeholder shown when video missing -->
+        <div class="bg-light border rounded d-flex align-items-center justify-content-center"
           style="height:260px;">
-          <span class="text-muted">[ {{ lesson.title }} image ]</span>
+          <span class="text-muted">[ {{ lesson.title }} video ]</span>
         </div>
-      </div>
+      {% endif %}
+    </div>
 
       <!-- Content -->
       <div class="col-md-6">

@@ -4,6 +4,8 @@
 <div class="container py-4">
   <h2 class="text-center mb-4">Question {{ question_num }}</h2>
 
+  <div id="quizData" data-answers='{{ answers|tojson }}' data-total="{{ total }}"></div>
+
   <div class="wc-card p-4">
     <p class="text-center mb-4" style="font-size:1.25rem;">{{ question.question }}</p>
 
@@ -30,7 +32,13 @@
     </form>
   </div>
 
-  <!-- Navigation (prev only — next submits the form) -->
+  {% if error %}
+  <div class="alert alert-danger mt-3">
+    Please answer: <strong>{{ error }}</strong>
+  </div>
+  {% endif %}
+
+  <!-- Navigation -->
   <div class="d-flex justify-content-between mt-4">
     {% if question_num > 1 %}
       <a href="/quiz/{{ question_num - 1 }}" class="btn btn-wc">Prev</a>
@@ -43,7 +51,6 @@
     </span>
 
     {% if question_num < total %}
-      <!-- clicking an option auto-submits; this is a fallback skip -->
       <form method="POST" action="/quiz/{{ question_num }}">
         <input type="hidden" name="answer" value="">
         <button type="submit" class="btn btn-wc">Next →</button>
@@ -61,14 +68,11 @@
 
 {% block scripts %}
 <script>
-// Allow clicking an option to immediately submit
-document.querySelectorAll('.option-btn').forEach(btn => {
-  btn.addEventListener('click', function(e) {
-    // highlight selected
-    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-    this.classList.add('selected');
-    // form submits naturally via type=submit
+  document.querySelectorAll('.option-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+      this.classList.add('selected');
+    });
   });
-});
 </script>
 {% endblock %}

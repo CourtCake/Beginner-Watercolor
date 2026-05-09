@@ -1,9 +1,11 @@
-from flask import Flask, render_template, redirect, url_for, request, session
+from flask import Flask, render_template, redirect, url_for, request, session, send_from_directory
 import json
 from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = 'watercolor_secret_key'
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['SESSION_COOKIE_SECURE'] = False
 
 # ── DATA ────────────────────────────────────────────────────────────────────
 
@@ -11,6 +13,7 @@ LESSONS = [
     {
         "id": 1,
         "title": "Wet on Dry",
+        "video": "tutorials/technique-1.mp4",
         "description": " This is a simple technique but once this is mastered, it opens up a world of possibilities with watercolor. \n Step 1: Dip your brush in water \n Step 2: Swirl the brush in the paint \n Step 3: Start painting across the paper",
         "best_for": ["Adding details", "Creating sharp edges", "Line work"],
         "tip_title": "Can't get a clean line?",
@@ -20,7 +23,8 @@ LESSONS = [
     {
         "id": 2,
         "title": "Wet on Wet",
-        "description": "Similar to wet on dry, but before painting you add a wash of water to the paper. This creates a softer, diffused effect. You can also use this to create a bloom effect and other fluid textures.",
+        "video": "tutorials/technique-2.mp4",
+        "description": "This is a simple technique but once this is mastered, it opens up a world of possibilities with watercolor. \n Step 1: Dip your brush in water and wet brush water onto the watercolor paper. \n Step 2: Dip your brush in water and swirl it in the paint. \n Step 3: Start painting across the wet areas of the paper.",
         "best_for": ["Blending", "Bloom Effect", "Soft backgrounds"],
         "tip_title": "Color going everywhere?",
         "tip": "Too much water on the paper. Put a light wash of water and work in small sections.",
@@ -29,7 +33,8 @@ LESSONS = [
     {
         "id": 3,
         "title": "Flat Wash",
-        "description": "A single color evenly painted and pigmented across the paper. Prepare a large puddle of paint on the palette and use a square brush on dry paper.",
+        "video": "tutorials/technique-3.mp4",
+        "description": "A single color evenly painted and pigmented across the paper. \n Step 1: Dip your brush in water \n Step 2: Swirl the brush in the paint \n Step 3: Swirl the paint on the palette to ensure an even coat. \n Step 4: Apply the paint to the paper in a smooth, even layer.",
         "best_for": ["Blocking out large areas of color"],
         "tip_title": "Can't get an even wash?",
         "tip": "Make sure you are on dry paper and use a palette to mix the desired consistency of paint.",
@@ -38,6 +43,7 @@ LESSONS = [
     {
         "id": 4,
         "title": "Gradient",
+        "video": "tutorials/technique-4.mp4",
         "description": "Starts just like a flat wash, but every pass you introduce a bit more water to diffuse the color. This creates a gradual ombre effect and can also blend one color into another.",
         "best_for": ["Ombre effects", "Color blending", "Skies"],
         "tip_title": "Can't get a clean transition?",
@@ -47,6 +53,7 @@ LESSONS = [
     {
         "id": 5,
         "title": "Dry Brush",
+        "video": "tutorials/technique-5.mp4",
         "description": "Use a brush with very little paint so that the bristles are still dry and separated. Lightly and quickly stroke the dry paper.",
         "best_for": ["Fur", "Grass", "Texture and detail"],
         "tip_title": "Can't get the texture?",
@@ -129,7 +136,6 @@ QUIZ_QUESTIONS = [
 
 @app.route('/')
 def home():
-    session.clear()
     return render_template('home.html')
 
 @app.route('/start')
@@ -137,18 +143,23 @@ def start():
     session['start_time'] = datetime.now().isoformat()
     session['lesson_times'] = {}
     session['quiz_answers'] = {}
+    session.modified = True
     return redirect(url_for('learn', lesson_num=1))
+
+@app.route('/tutorials/<path:filename>')
+def serve_tutorial(filename):
+    return send_from_directory('tutorials', filename)
 
 @app.route('/learn/<int:lesson_num>')
 def learn(lesson_num):
     if lesson_num < 1 or lesson_num > len(LESSONS):
         return redirect(url_for('home'))
-    # Record time user entered this lesson page
     if 'lesson_times' not in session:
         session['lesson_times'] = {}
     times = session['lesson_times']
     times[str(lesson_num)] = datetime.now().isoformat()
     session['lesson_times'] = times
+    session.modified = True
 
     lesson = LESSONS[lesson_num - 1]
     total = len(LESSONS)
@@ -156,8 +167,15 @@ def learn(lesson_num):
 
 @app.route('/quiz')
 def quiz_intro():
-    session.pop('quiz_answers', None)
+    session['quiz_answers'] = {}
+    session.modified = True
     return render_template('quiz_intro.html')
+
+@app.route('/quiz/restart')
+def quiz_restart():
+    session['quiz_answers'] = {}
+    session.modified = True
+    return redirect(url_for('quiz', question_num=1))
 
 @app.route('/quiz/<int:question_num>', methods=['GET', 'POST'])
 def quiz(question_num):
@@ -170,8 +188,10 @@ def quiz(question_num):
             if 'quiz_answers' not in session:
                 session['quiz_answers'] = {}
             answers = session['quiz_answers']
-            answers[str(question_num)] = int(answer)
+            if answer != '':
+                answers[str(question_num)] = int(answer)
             session['quiz_answers'] = answers
+            session.modified = True
 
         if question_num < len(QUIZ_QUESTIONS):
             return redirect(url_for('quiz', question_num=question_num + 1))
@@ -181,12 +201,21 @@ def quiz(question_num):
     question = QUIZ_QUESTIONS[question_num - 1]
     total = len(QUIZ_QUESTIONS)
     selected = session.get('quiz_answers', {}).get(str(question_num))
+    error = request.args.get('error')
     return render_template('quiz.html', question=question, question_num=question_num,
-                           total=total, selected=selected)
+                           total=total, selected=selected,
+                           answers=session.get('quiz_answers', {}), error=error)
 
 @app.route('/results')
 def results():
     answers = session.get('quiz_answers', {})
+    total = len(QUIZ_QUESTIONS)
+
+    unanswered = [i for i in range(1, total + 1) if str(i) not in answers]
+    if unanswered:
+        nums = ', '.join([f'Question {i}' for i in unanswered])
+        return redirect(url_for('quiz', question_num=unanswered[0], error=nums))
+
     score = 0
     breakdown = []
     for q in QUIZ_QUESTIONS:
@@ -200,13 +229,7 @@ def results():
             'correct_answer': q['options'][q['correct']],
             'correct': correct
         })
-    total = len(QUIZ_QUESTIONS)
     return render_template('results.html', score=score, total=total, breakdown=breakdown)
-
-@app.route('/quiz/restart')
-def quiz_restart():
-    session.pop('quiz_answers', None)
-    return redirect(url_for('quiz', question_num=1))
 
 if __name__ == '__main__':
     app.run(debug=True)
