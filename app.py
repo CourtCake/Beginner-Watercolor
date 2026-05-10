@@ -24,7 +24,7 @@ LESSONS = [
         "id": 2,
         "title": "Wet on Wet",
         "video": "tutorials/technique-2.mp4",
-        "description": "Lets build on the wet on dry technique. \n Step 1: Dip your brush in water and wet brush water onto the watercolor paper \n Step 2: Dip your brush in water and swirl it in the paint \n Step 3: Start painting across the wet areas of the paper",
+        "description": "Lets build off of the wet on dry technique to create some cool effects using wet paper. \n Step 1: Dip your brush in water and wet brush water onto the watercolor paper \n Step 2: Dip your brush in water and swirl it in the paint \n Step 3: Start painting across the wet areas of the paper",
         "best_for": ["Blending", "Bloom Effect", "Soft backgrounds"],
         "tip_title": "Color going everywhere?",
         "tip": "Too much water on the paper. Put a light wash of water and work in small sections.",
@@ -63,6 +63,7 @@ LESSONS = [
     {
         "id": 6,
         "title": "Wax Crayon",
+        "video": "tutorials/technique-6.mp4",
         "description": "This technique masks out areas of the paper. The wax seals the paper, preventing it from absorbing the paint, creating interesting textures. \n Step 1: Use your wax crayon to draw the desired shapes on dry paper \n Step 2: Paint over the desired area with watercolors",
         "best_for": ["Blocking areas", "Intricate line work"],
         "tip_title": "Finding this tricky?",
@@ -82,19 +83,19 @@ QUIZ_QUESTIONS = [
             "Paint the entire page in the main color then from the center brush out white paint."
         ],
         "correct": 1,
-        "image": None
+        "image": "question_images/question-1.jpg"
     },
     {
         "id": 2,
-        "question": "Tom is working on a painting of the night sky and wants to add a full moon and white fluffy clouds. What is the best way to achieve this effect?",
+        "question": "Tom is working on a painting of the night sky and wants to add a full moon and fluffy clouds. What is the best way to achieve this effect?",
         "options": [
-            "Outline the area using a thin wet brush on the dry paper.",
-            "Paint those parts first then paint the sky parts around them.",
-            "Block out the area with a thin line using a wax crayon.",
-            "Paint the sky first then use a thick coat of white paint over it."
+            "Outline the moon using a thin wet brush on the dry paper.",
+            "Paint the moon first then paint the sky and clouds around them.",
+            "Block out the shapes with a thin line using a wax crayon and use wet on wet for clouds.",
+            "Paint the sky and clouds first, then use a thick coat of white paint over it."
         ],
         "correct": 2,
-        "image": None
+        "image": "question_images/question-2.jpg"
     },
     {
         "id": 3,
@@ -106,29 +107,31 @@ QUIZ_QUESTIONS = [
             "Use a mix of dry brush strokes and a detail brush to add depth and texture."
         ],
         "correct": 3,
-        "image": None
+        "image": "question_images/question-3.jpg"
     },
     {
         "id": 4,
         "question": "Choose the correct techniques for the painting.",
         "options": [
-            "Gradient, dry brush, wax crayon.",
-            "Wet on dry, gradient, flat wash.",
-            "Wet on wet, wax crayon, flat wash."
+            "Gradient, dry brush, wax crayon",
+            "Wet on dry, gradient, flat wash",
+            "Wet on wet, wax crayon, flat wash",
+            "Wet on wet, wet on dry, gradient"
         ],
         "correct": 2,
-        "image": "q4_painting.jpg"
+        "image": "question_images/question-4.jpg"
     },
     {
         "id": 5,
         "question": "Choose the correct techniques for the painting.",
         "options": [
-            "Flat wash, gradient, wet on dry.",
-            "Wet on dry, wax crayon, wet on wet.",
-            "Wet on wet, dry brush, gradient."
+            "Flat wash, gradient, wet on dry",
+            "Wet on dry, wax crayon, wet on wet",
+            "Wet on wet, dry brush, gradient",
+            "Wet on wet, wet on dry, gradient"
         ],
         "correct": 0,
-        "image": "q5_painting.jpg"
+        "image": "question_images/question-5.jpg"
     }
 ]
 
@@ -170,6 +173,10 @@ def quiz_intro():
     session['quiz_answers'] = {}
     session.modified = True
     return render_template('quiz_intro.html')
+
+@app.route('/question_images/<path:filename>')
+def serve_question_images(filename):
+    return send_from_directory('question_images', filename)
 
 @app.route('/quiz/restart')
 def quiz_restart():
