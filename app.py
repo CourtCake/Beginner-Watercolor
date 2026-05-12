@@ -172,7 +172,7 @@ def learn(lesson_num):
 def quiz_intro():
     session['quiz_answers'] = {}
     session.modified = True
-    return render_template('quiz_intro.html')
+    return redirect(url_for('quiz', question_num=1))
 
 @app.route('/question_images/<path:filename>')
 def serve_question_images(filename):
