@@ -1,24 +1,69 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="hero-banner">
-  <h1>Beginner Watercolor<br>for Hobbyists</h1>
+<div style="background: var(--white); border-bottom: 1.5px solid #e0efee; padding: 5rem 2rem 4rem;">
+  <div class="container text-center">
+    <p class="eyebrow mb-3">Beginner · Hobbyist · Relaxation</p>
+    <h1 style="font-size: 3.8rem; font-style: italic; line-height: 1.1; margin-bottom: 1rem;">
+      Beginner<br>Watercolor<br><span style="color: var(--coral);">for Hobbyists</span>
+    </h1>
+    <hr class="wc-divider">
+    <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.95rem; color: var(--mid); max-width: 380px; margin: 0 auto 2.5rem;">
+      Learn 6 essential strokes and techniques.<br>Start creating in no time.
+    </p>
+    <div class="d-flex gap-3 justify-content-center">
+      <a href="/start" class="btn-wc">Learn</a>
+      <a href="/quiz" class="btn-wc-outline">Quiz</a>
+    </div>
+  </div>
+</div>
+
+<div style="background: var(--teal); padding: 1.5rem 2rem; border-bottom: 1.5px solid #b8d8d7;">
+  <div class="container">
+    <div class="row text-center g-3">
+      <div class="col-4">
+        <div style="font-family: 'Caveat', cursive; font-size: 2.2rem; font-weight: 700;">6</div>
+        <div style="font-family: 'Comfortaa', sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">Techniques</div>
+      </div>
+      <div class="col-4" style="border-left: 1.5px solid #b8d8d7; border-right: 1.5px solid #b8d8d7;">
+        <div style="font-family: 'Caveat', cursive; font-size: 2.2rem; font-weight: 700;">5</div>
+        <div style="font-family: 'Comfortaa', sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">Quiz Questions</div>
+      </div>
+      <div class="col-4">
+        <div style="font-family: 'Caveat', cursive; font-size: 2.2rem; font-weight: 700;">∞</div>
+        <div style="font-family: 'Comfortaa', sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em;">Creativity</div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="container py-5">
+  <p class="eyebrow text-center mb-4">Where do you want to start?</p>
   <div class="row justify-content-center g-4">
-    <div class="col-md-4 text-center">
-      <div class="wc-card p-4">
-        <h3 class="mb-3">Learn</h3>
-        <p>Explore 6 foundational brush strokes and techniques.</p>
-        <a href="/start" class="btn btn-wc mt-2">Start Learning</a>
+    <div class="col-md-5">
+      <div class="wc-card p-4 h-100">
+        <p class="eyebrow mb-2">01</p>
+        <h3 style="font-size: 1.9rem; font-style: italic;">Learn</h3>
+        <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.85rem; color: var(--mid); margin-bottom: 1.5rem;">
+          Explore 6 foundational brush strokes and techniques — from wet on dry to wax crayon.
+        </p>
+        <div style="font-family: 'Comfortaa', sans-serif; font-size: 0.75rem; color: var(--mid); margin-bottom: 1.5rem;">
+          Strokes · Gradients · Texture
+        </div>
+        <a href="/start" class="btn-wc">Start Learning →</a>
       </div>
     </div>
-    <div class="col-md-4 text-center">
-      <div class="wc-card p-4">
-        <h3 class="mb-3">Quiz</h3>
-        <p>Test your knowledge of watercolor techniques.</p>
-        <a href="/quiz" class="btn btn-wc mt-2">Take the Quiz</a>
+    <div class="col-md-5">
+      <div class="wc-card p-4 h-100" style="border-left: 4px solid var(--coral);">
+        <p class="eyebrow mb-2">02</p>
+        <h3 style="font-size: 1.9rem; font-style: italic;">Quiz</h3>
+        <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.85rem; color: var(--mid); margin-bottom: 1.5rem;">
+          Test your knowledge across 5 real painting scenarios. Can you identify the right technique?
+        </p>
+        <div style="font-family: 'Comfortaa', sans-serif; font-size: 0.75rem; color: var(--mid); margin-bottom: 1.5rem;">
+          5 Questions · Instant Feedback
+        </div>
+        <a href="/quiz" class="btn-wc-outline">Take the Quiz →</a>
       </div>
     </div>
   </div>
