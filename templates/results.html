@@ -1,46 +1,50 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container py-4">
-  <h2 class="text-center mb-4">Results</h2>
+<div class="container py-5" style="max-width: 700px;">
 
-  <div class="wc-card p-4 text-center mb-4">
-    <div style="font-size:3.5rem; font-weight:600;">{{ score }}/{{ total }}</div>
+  <div class="wc-card p-5 text-center mb-4">
+    <p class="eyebrow mb-2">Your Score</p>
+    <div style="font-family: 'Caveat', cursive; font-size: 6rem; font-weight: 700; line-height: 1; color: var(--dark);">
+      {{ score }}<span style="font-size: 3rem; color: var(--mid);">/{{ total }}</span>
+    </div>
+    <hr class="wc-divider">
     {% if score == total %}
-      <p class="mt-2">Great job! You now have all the tools to get started on your own original creation!</p>
+      <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.9rem; color: var(--mid);">Great job! You now have all the tools to start your own original creation!</p>
     {% elif score >= total // 2 %}
-      <p class="mt-2">Good effort! Review the lessons and try again to master all the techniques.</p>
+      <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.9rem; color: var(--mid);">Strong start — review once and you'll paint with confidence!</p>
     {% else %}
-      <p class="mt-2">Keep practicing! Head back to the lessons and brush up on the techniques.</p>
+      <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.9rem; color: var(--mid);">Keep practicing! Head back to the lessons and brush up on the techniques.</p>
     {% endif %}
+    <div class="d-flex gap-3 justify-content-center mt-3">
+      <a href="/quiz/restart" class="btn-wc">Restart Quiz</a>
+      <a href="/" class="btn-wc-outline">Home</a>
+    </div>
   </div>
 
-  <!-- Score breakdown -->
-  <div class="wc-card p-4 mb-4">
-    <h4 class="mb-3">Review</h4>
+  <div class="wc-card p-4">
+    <p class="eyebrow mb-3">Review</p>
     {% for item in breakdown %}
-    <div class="mb-3 pb-3 {% if not loop.last %}border-bottom{% endif %}">
-      <p class="mb-1"><strong>Q{{ loop.index }}:</strong> {{ item.question }}</p>
-      <p class="mb-0">
-        Your answer:
-        <span class="{% if item.correct %}text-success{% else %}text-danger{% endif %}">
-          {{ item.your_answer }}
-          {% if item.correct %} ✓{% else %} ✗{% endif %}
+    <div class="mb-3 pb-3 {% if not loop.last %}border-bottom{% endif %}" style="border-color: #e0efee !important;">
+      <div style="display: flex; align-items: flex-start; gap: 0.75rem;">
+        <span style="font-family: 'Caveat', cursive; font-size: 1.3rem; font-weight: 700; color: {% if item.correct %}var(--teal-dark){% else %}var(--coral){% endif %}; min-width: 24px; line-height: 1.2;">
+          {% if item.correct %}✓{% else %}✗{% endif %}
         </span>
-      </p>
-      {% if not item.correct %}
-      <p class="mb-0 text-muted" style="font-size:1rem;">
-        Correct: {{ item.correct_answer }}
-      </p>
-      {% endif %}
+        <div>
+          <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.8rem; font-weight: 700; color: var(--dark); margin-bottom: 0.25rem;">Q{{ loop.index }}: {{ item.question }}</p>
+          <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.8rem; color: {% if item.correct %}var(--teal-dark){% else %}var(--coral){% endif %}; margin-bottom: 0.1rem;">
+            Your answer: {{ item.your_answer }}
+          </p>
+          {% if not item.correct %}
+          <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.8rem; color: var(--mid); margin: 0;">
+            Correct: {{ item.correct_answer }}
+          </p>
+          {% endif %}
+        </div>
+      </div>
     </div>
     {% endfor %}
   </div>
 
-  <div class="d-flex justify-content-center gap-3">
-    <a href="/quiz/restart" class="btn btn-wc">Restart Quiz</a>
-    <a href="/" class="btn btn-wc">Home</a>
-  </div>
 </div>
-
 {% endblock %}
