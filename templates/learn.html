@@ -13,23 +13,11 @@
     <div class="row align-items-start g-4">
 
       <div class="col-md-5 text-center">
-        <!-- Video -->
         {% if lesson.video %}
-        <video controls class="w-100 rounded mb-3" style="border-radius: 10px; border: 1.5px solid #e0efee;">
+        <video controls class="w-100 rounded" style="border-radius: 10px; border: 1.5px solid #e0efee;">
           <source src="/{{ lesson.video }}" type="video/mp4">
         </video>
         {% endif %}
-
-        <!-- Image -->
-        {% if lesson.image %}
-          <img src="/static/images/{{ lesson.image }}" class="img-fluid rounded" alt="{{ lesson.title }}"
-               style="border-radius: 10px; border: 1.5px solid #e0efee;"
-               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-        {% endif %}
-        <div class="d-flex align-items-center justify-content-center"
-             style="height:240px; background: var(--teal); border-radius: 10px; {% if lesson.image %}display:none{% endif %}">
-          <span style="font-family: 'Caveat', cursive; font-size: 1.1rem; color: var(--dark);">{{ lesson.title }}</span>
-        </div>
       </div>
 
       <div class="col-md-7">
@@ -66,6 +54,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 
