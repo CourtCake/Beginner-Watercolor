@@ -1,78 +1,83 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container py-4">
-  <h2 class="text-center mb-4">Question {{ question_num }}</h2>
+<div class="container py-5" style="max-width: 860px;">
 
-  <div id="quizData" data-answers='{{ answers|tojson }}' data-total="{{ total }}"></div>
+  <div class="text-center mb-4">
+    <p class="eyebrow mb-1">Quiz</p>
+    <h2 style="font-size: 2.4rem; font-style: italic; margin-bottom: 0.25rem;">Question {{ question_num }}</h2>
+    <hr class="wc-divider">
+    <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.9rem; color: var(--mid);">{{ question.question }}</p>
+  </div>
 
   <div class="wc-card p-4">
-    <p class="text-center mb-4" style="font-size:1.25rem;">{{ question.question }}</p>
+    <div class="row g-4 align-items-start">
 
-    {% if question.image %}
-    <div class="row mb-4 justify-content-center">
-      <div class="col-md-5 text-center">
-        <img src="/{{ question.image }}" class="img-fluid rounded" alt="Question image"
-             onerror="this.style.display='none'">
-      </div>
-    </div>
-    {% endif %}
-
-    <form method="POST" action="/quiz/{{ question_num }}" id="quizForm">
-      <div class="row g-3 justify-content-center">
-        {% for option in question.options %}
-        <div class="col-md-{% if question.options|length == 3 %}4{% else %}6{% endif %}">
-          <button type="submit" name="answer" value="{{ loop.index0 }}"
-                  class="option-btn {% if selected == loop.index0 %}selected{% endif %}">
-            {{ option }}
-          </button>
+      {% if question.image %}
+      <div class="col-md-4">
+        <div style="background: var(--teal); border-radius: 10px; padding: 1.5rem; text-align: center; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+          <img src="/{{ question.image }}" class="img-fluid rounded" alt="Question image"
+               style="border-radius: 8px; max-height: 160px; object-fit: cover;"
+               onerror="this.style.display='none';">
+          <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.7rem; color: var(--mid); margin-top: 0.75rem; margin-bottom: 0;">Painting Reference</p>
         </div>
-        {% endfor %}
       </div>
-    </form>
+      {% endif %}
+
+      <div class="{% if question.image %}col-md-8{% else %}col-12{% endif %}">
+        <form method="POST" action="/quiz/{{ question_num }}" id="quizForm">
+          <div class="row g-3">
+            {% for option in question.options %}
+            <div class="col-sm-6">
+              <button type="submit" name="answer" value="{{ loop.index0 }}"
+                      class="option-btn {% if selected == loop.index0 %}selected{% endif %}">
+                {{ option }}
+              </button>
+            </div>
+            {% endfor %}
+          </div>
+        </form>
+      </div>
+
+    </div>
   </div>
 
-  {% if error %}
-  <div class="alert alert-danger mt-3">
-    Please answer: <strong>{{ error }}</strong>
-  </div>
-  {% endif %}
-
-  <!-- Navigation -->
-  <div class="d-flex justify-content-between mt-4">
+  <div class="d-flex justify-content-between align-items-center mt-4">
     {% if question_num > 1 %}
-      <a href="/quiz/{{ question_num - 1 }}" class="btn btn-wc">Prev</a>
+      <a href="/quiz/{{ question_num - 1 }}" class="btn-wc-outline">← Prev</a>
     {% else %}
-      <a href="/" class="btn btn-wc">Home</a>
+      <a href="/" class="btn-wc-outline">← Back</a>
     {% endif %}
 
-    <span class="align-self-center text-muted" style="font-size:1rem;">
-      {{ question_num }} / {{ total }}
-    </span>
+    <div class="progress-dots">
+      {% for i in range(1, total + 1) %}
+        <div class="dot {% if i == question_num %}active{% elif i < question_num %}done{% endif %}"></div>
+      {% endfor %}
+    </div>
 
     {% if question_num < total %}
       <form method="POST" action="/quiz/{{ question_num }}">
         <input type="hidden" name="answer" value="">
-        <button type="submit" class="btn btn-wc">Next →</button>
+        <button type="submit" class="btn-wc">Next →</button>
       </form>
     {% else %}
       <form method="POST" action="/quiz/{{ question_num }}">
         <input type="hidden" name="answer" value="">
-        <button type="submit" class="btn btn-wc">Submit</button>
+        <button type="submit" class="btn-wc">Submit</button>
       </form>
     {% endif %}
   </div>
-</div>
 
+</div>
 {% endblock %}
 
 {% block scripts %}
 <script>
-  document.querySelectorAll('.option-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
-      this.classList.add('selected');
-    });
+document.querySelectorAll('.option-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+    this.classList.add('selected');
   });
+});
 </script>
 {% endblock %}
