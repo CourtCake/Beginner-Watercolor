@@ -13,6 +13,14 @@
     <div class="row align-items-start g-4">
 
       <div class="col-md-5 text-center">
+        <!-- Video -->
+        {% if lesson.video %}
+        <video controls class="w-100 rounded mb-3" style="border-radius: 10px; border: 1.5px solid #e0efee;">
+          <source src="/{{ lesson.video }}" type="video/mp4">
+        </video>
+        {% endif %}
+
+        <!-- Image -->
         {% if lesson.image %}
           <img src="/static/images/{{ lesson.image }}" class="img-fluid rounded" alt="{{ lesson.title }}"
                style="border-radius: 10px; border: 1.5px solid #e0efee;"
