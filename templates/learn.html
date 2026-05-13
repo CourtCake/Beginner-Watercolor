@@ -1,74 +1,85 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container py-4">
-  <h2 class="text-center mb-4">{{ lesson.id }}. {{ lesson.title }}</h2>
+<div class="container py-5" style="max-width: 820px;">
 
-  <div class="wc-card p-4">
+  <div class="text-center mb-4">
+    <p class="eyebrow mb-1">Technique {{ "%02d"|format(lesson.id) }}</p>
+    <h2 style="font-size: 2.4rem; font-style: italic; margin-bottom: 0.25rem;">{{ lesson.title }}</h2>
+    <hr class="wc-divider">
+  </div>
+
+  <div class="wc-card p-4 p-md-5">
     <div class="row align-items-start g-4">
 
-    <!-- Video -->
-    <div class="col-md-6 text-center">
-      {% if lesson.video %}
-        <video controls muted class="img-fluid rounded">
-          <source src="/{{ lesson.video }}" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      {% else %}
-        <!-- Placeholder shown when video missing -->
-        <div class="bg-light border rounded d-flex align-items-center justify-content-center"
-          style="height:260px;">
-          <span class="text-muted">[ {{ lesson.title }} video ]</span>
-        </div>
-      {% endif %}
-    </div>
-
-      <!-- Content -->
-      <div class="col-md-6">
-        <p class="mb-4" style="font-size:1.15rem; white-space: pre-line;">{{ lesson.description }}</p>
-      </div>
-
-    </div>
-
-    <!-- Info boxes -->
-    <div class="row g-3 mt-2">
-      <div class="col-sm-6">
-        <div class="box-green h-100">
-          <strong>✅ Best for:</strong>
-          <ul class="mt-1 mb-0">
-            {% for item in lesson.best_for %}
-              <li>{{ item }}</li>
-            {% endfor %}
-          </ul>
+      <div class="col-md-5 text-center">
+        {% if lesson.image %}
+          <img src="/static/images/{{ lesson.image }}" class="img-fluid rounded" alt="{{ lesson.title }}"
+               style="border-radius: 10px; border: 1.5px solid #e0efee;"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        {% endif %}
+        <div class="d-flex align-items-center justify-content-center"
+             style="height:240px; background: var(--teal); border-radius: 10px; {% if lesson.image %}display:none{% endif %}">
+          <span style="font-family: 'Caveat', cursive; font-size: 1.1rem; color: var(--dark);">{{ lesson.title }}</span>
         </div>
       </div>
-      <div class="col-sm-6">
-        <div class="box-orange h-100">
-          <strong>💡 {{ lesson.tip_title }}</strong>
-          <p class="mt-1 mb-0">{{ lesson.tip }}</p>
+
+      <div class="col-md-7">
+        <div class="mb-4">
+          {% set steps = lesson.description.split('\n') %}
+          {% for step in steps %}
+            {% if step.strip() %}
+              {% if loop.first %}
+                <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.9rem; color: var(--mid); margin-bottom: 1rem;">{{ step.strip() }}</p>
+              {% else %}
+                <div style="display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.6rem;">
+                  <span style="font-family: 'Caveat', cursive; font-size: 1rem; font-weight: 700; color: var(--coral); min-width: 24px;">{{ loop.index0 }}.</span>
+                  <span style="font-family: 'Comfortaa', sans-serif; font-size: 0.85rem; color: var(--dark);">{{ step.replace('Step 1: ','').replace('Step 2: ','').replace('Step 3: ','').replace('Step 4: ','').replace('Step 5: ','').strip() }}</span>
+                </div>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <div class="row g-3">
+          <div class="col-sm-6">
+            <div class="box-teal h-100">
+              <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem;">Best For</p>
+              {% for item in lesson.best_for %}
+                <div style="font-family: 'Comfortaa', sans-serif; font-size: 0.8rem; color: var(--dark); padding: 0.15rem 0;">· {{ item }}</div>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="col-sm-6">
+            <div class="box-coral h-100">
+              <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.5rem; color: var(--coral);">{{ lesson.tip_title }}</p>
+              <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.8rem; color: var(--dark); margin: 0;">{{ lesson.tip }}</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Navigation -->
-  <div class="d-flex justify-content-between mt-4">
+  <div class="d-flex justify-content-between align-items-center mt-4">
     {% if lesson_num == 1 %}
-      <a href="/" class="btn btn-wc">Home</a>
+      <a href="/" class="btn-wc-outline">← Home</a>
     {% else %}
-      <a href="/learn/{{ lesson_num - 1 }}" class="btn btn-wc">Prev</a>
+      <a href="/learn/{{ lesson_num - 1 }}" class="btn-wc-outline">← Prev</a>
     {% endif %}
 
-    <span class="align-self-center text-muted" style="font-size:1rem;">
-      {{ lesson_num }} / {{ total }}
-    </span>
+    <div class="progress-dots">
+      {% for i in range(1, total + 1) %}
+        <div class="dot {% if i == lesson_num %}active{% elif i < lesson_num %}done{% endif %}"></div>
+      {% endfor %}
+    </div>
 
     {% if lesson_num < total %}
-      <a href="/learn/{{ lesson_num + 1 }}" class="btn btn-wc">Next</a>
+      <a href="/learn/{{ lesson_num + 1 }}" class="btn-wc">Next →</a>
     {% else %}
-      <a href="/quiz" class="btn btn-wc">Quiz →</a>
+      <a href="/quiz" class="btn-wc">Quiz →</a>
     {% endif %}
   </div>
-</div>
 
+</div>
 {% endblock %}
