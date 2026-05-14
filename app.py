@@ -1,5 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, request, session, send_from_directory
 import json
+import os
 from datetime import datetime
 
 app = Flask(__name__)
@@ -139,7 +140,9 @@ QUIZ_QUESTIONS = [
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    folder = os.path.join(app.root_path, 'question_images')
+    images = [f for f in os.listdir(folder) if f.lower().endswith(('.jpg'))]
+    return render_template('home.html', images=images)
 
 @app.route('/start')
 def start():
