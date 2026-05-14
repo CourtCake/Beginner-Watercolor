@@ -1,39 +1,35 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="container py-5" style="max-width: 860px;">
+<div class="container py-5" style="max-width: 1100px;">
 
   <div class="text-center mb-4">
     <p class="eyebrow mb-1">Quiz</p>
-    <h2 style="font-size: 2.4rem; font-style: italic; margin-bottom: 0.25rem;">Question {{ question_num }}</h2>
+    <h2 style="font-size: 3rem; font-style: italic; margin-bottom: 0.25rem;">Question {{ question_num }}</h2>
     <hr class="wc-divider">
-    <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.9rem; color: var(--mid);">{{ question.question }}</p>
+    <p style="font-family: 'Comfortaa', sans-serif; font-size: 1rem; color: var(--mid);">{{ question.question }}</p>
   </div>
 
-  <div class="wc-card p-4">
-    <div class="row g-4 align-items-start">
+  <div class="wc-card p-4 p-md-5">
+    <div class="row g-4 align-items-stretch">
 
       {% if question.image %}
-      <div class="col-md-4">
-        <div style="background: var(--teal); border-radius: 10px; padding: 1.5rem; text-align: center; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-          <img src="/{{ question.image }}" class="img-fluid rounded" alt="Question image"
-               style="border-radius: 8px; max-height: 160px; object-fit: cover;"
-               onerror="this.style.display='none';">
-          <p style="font-family: 'Comfortaa', sans-serif; font-size: 0.7rem; color: var(--mid); margin-top: 0.75rem; margin-bottom: 0;">Painting Reference</p>
-        </div>
+      <div class="col-md-5">
+        <img src="/{{ question.image }}" alt="Question image"
+             style="width: 100%; height: 100%; max-height: 380px; border-radius: 10px; object-fit: cover; border: 1.5px solid #e0efee; display: block;"
+             onerror="this.style.display='none';">
       </div>
       {% endif %}
 
-      <div class="{% if question.image %}col-md-8{% else %}col-12{% endif %}">
-        <form method="POST" action="/quiz/{{ question_num }}" id="quizForm">
-          <div class="row g-3">
+      <div class="{% if question.image %}col-md-7{% else %}col-12{% endif %}">
+        <form method="POST" action="/quiz/{{ question_num }}" id="quizForm" style="height: 100%;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 1rem; height: 100%;">
             {% for option in question.options %}
-            <div class="col-sm-6">
-              <button type="submit" name="answer" value="{{ loop.index0 }}"
-                      class="option-btn {% if selected == loop.index0 %}selected{% endif %}">
-                {{ option }}
-              </button>
-            </div>
+            <button type="submit" name="answer" value="{{ loop.index0 }}"
+                    class="option-btn {% if selected == loop.index0 %}selected{% endif %}"
+                    style="font-size: 0.9rem; padding: 1rem 1.25rem; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; text-align: center;">
+              {{ option }}
+            </button>
             {% endfor %}
           </div>
         </form>
